@@ -1,22 +1,26 @@
 package org.cobalt.internal.ui.screen
 
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.text.Text
+import net.minecraft.client.gui.Click
 import org.cobalt.Cobalt.mc
 import org.cobalt.api.event.EventBus
 import org.cobalt.api.event.annotation.SubscribeEvent
 import org.cobalt.api.event.impl.render.NvgEvent
-import org.cobalt.api.util.TickScheduler
 import org.cobalt.api.util.ui.NVGRenderer
 import org.cobalt.internal.helper.Config
+import org.cobalt.internal.ui.UIScreen
 import org.cobalt.internal.ui.animation.EaseInOutAnimation
-import org.cobalt.internal.ui.util.Constants
+import org.cobalt.internal.ui.panel.panels.UIMainBody
+import org.cobalt.internal.ui.panel.panels.UISidebar
 
-object UIScreen : Screen(Text.empty()) {
+object UIConfig : UIScreen() {
 
   /** Needed for opening animation */
   private val openAnim = EaseInOutAnimation(400)
   private var wasClosed = true
+
+  /** UI Panels */
+  private val sidebar = UISidebar()
+  private val mainBody = UIMainBody()
 
   init {
     EventBus.register(this)
@@ -28,32 +32,40 @@ object UIScreen : Screen(Text.empty()) {
     if (mc.currentScreen != this)
       return
 
-    val width = mc.window.width.toFloat()
-    val height = mc.window.height.toFloat()
+    val window = mc.window
+    val width = window.width.toFloat()
+    val height = window.height.toFloat()
 
     NVGRenderer.beginFrame(width, height)
 
     if (openAnim.isAnimating()) {
       val scale = openAnim.get(0f, 1f)
-      NVGRenderer.translate(width / 2, height / 2)
+      val cx = width / 2f
+      val cy = height / 2f
+
+      NVGRenderer.translate(cx, cy)
       NVGRenderer.scale(scale, scale)
-      NVGRenderer.translate(-width / 2, -height / 2)
+      NVGRenderer.translate(-cx, -cy)
     }
 
-    NVGRenderer.rect(
-      (width / 2) - (Constants.BASE_WIDTH / 2),
-      (height / 2) - (Constants.BASE_HEIGHT / 2),
-      Constants.BASE_WIDTH,
-      Constants.BASE_HEIGHT,
-      Constants.COLOR_BACKGROUND.rgb,
-      5F
-    )
+    val originX = width / 2f - 480f
+    val originY = height / 2f - 300f
+
+    sidebar
+      .updateBounds(originX, originY)
+      .render()
+
+    mainBody
+      .updateBounds(originX + 80f, originY)
+      .render()
 
     NVGRenderer.endFrame()
   }
 
-  override fun shouldPause(): Boolean {
-    return false
+  override fun mouseClicked(click: Click, doubled: Boolean): Boolean {
+    return mainBody.mouseClicked(click.button()) ||
+      sidebar.mouseClicked(click.button()) ||
+      super.mouseClicked(click, doubled)
   }
 
   override fun init() {
@@ -69,12 +81,6 @@ object UIScreen : Screen(Text.empty()) {
     Config.saveModulesConfig()
     wasClosed = true
     super.close()
-  }
-
-  fun openUI() {
-    TickScheduler.schedule(1) {
-      mc.setScreen(this)
-    }
   }
 
 }

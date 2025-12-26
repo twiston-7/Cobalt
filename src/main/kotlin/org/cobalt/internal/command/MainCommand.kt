@@ -6,7 +6,7 @@ import org.cobalt.api.command.annotation.SubCommand
 import org.cobalt.internal.rotation.EasingType
 import org.cobalt.internal.rotation.RotationExec
 import org.cobalt.internal.rotation.strategy.EasingStrategy
-import org.cobalt.internal.ui.screen.UIScreen
+import org.cobalt.internal.ui.screen.UIConfig
 
 object MainCommand : Command(
   name = "cobalt",
@@ -15,7 +15,7 @@ object MainCommand : Command(
 
   @DefaultHandler
   fun main() {
-    UIScreen.openUI()
+    UIConfig.openUI()
   }
 
   @SubCommand

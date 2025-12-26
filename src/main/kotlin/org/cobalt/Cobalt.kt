@@ -6,6 +6,7 @@ import org.cobalt.api.addon.Addon
 import org.cobalt.api.command.CommandManager
 import org.cobalt.api.event.EventBus
 import org.cobalt.api.event.annotation.SubscribeEvent
+import org.cobalt.api.event.impl.client.TickEvent
 import org.cobalt.api.event.impl.render.WorldRenderEvent
 import org.cobalt.api.pathfinder.IPathExec
 import org.cobalt.api.util.TickScheduler
@@ -53,9 +54,20 @@ object Cobalt : ClientModInitializer {
   private var pathExec: IPathExec = PathExec
 
   @SubscribeEvent
+  fun onTick(event: TickEvent.End) {
+    mc.player?.let {
+      pathExec.onTick(it)
+    }
+  }
+
+  @SubscribeEvent
   fun onWorldRenderLast(event: WorldRenderEvent.Last) {
     mc.player?.let {
       rotationExec.onRotate(it)
+    }
+
+    mc.player?.let {
+      pathExec.onWorldRenderLast(it)
     }
   }
 
