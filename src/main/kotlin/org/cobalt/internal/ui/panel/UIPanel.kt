@@ -28,7 +28,4 @@ internal abstract class UIPanel(
   override fun keyPressed(input: KeyInput) =
     components.any { it.keyPressed(input) }
 
-  open fun mouseScrolled(horizontalAmount: Double, verticalAmount: Double): Boolean = false
-  open fun onClose() = Unit
-
 }

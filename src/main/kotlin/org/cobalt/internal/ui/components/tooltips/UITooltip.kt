@@ -6,7 +6,6 @@ import org.cobalt.internal.ui.UIComponent
 import org.cobalt.internal.ui.animation.ColorAnimation
 import org.cobalt.internal.ui.util.isHoveringOver
 
-
 internal class UITooltip(
   private val content: () -> UIComponent,
   private val position: TooltipPosition = TooltipPosition.ABOVE,

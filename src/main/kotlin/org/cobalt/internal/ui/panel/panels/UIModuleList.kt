@@ -129,9 +129,23 @@ internal class UIModuleList(
     settings.forEach(UIComponent::render)
 
     NVGRenderer.popScissor()
+
+    settings.forEach { setting ->
+      when (setting) {
+        is UIModeSetting -> setting.renderDropdown()
+        is UIColorSetting -> {
+          // WILL DO LATER
+        }
+      }
+    }
   }
 
   override fun mouseScrolled(horizontalAmount: Double, verticalAmount: Double): Boolean {
+    settings.forEach {
+      if (it.mouseScrolled(horizontalAmount, verticalAmount))
+        return true
+    }
+
     if (isHoveringOver(x, y, width / 4F, height)) {
       modulesScroll.handleScroll(verticalAmount)
       return true
@@ -161,6 +175,7 @@ internal class UIModuleList(
         when (it) {
           is CheckboxSetting -> UICheckboxSetting(it)
           is ColorSetting -> UIColorSetting(it)
+          is InfoSetting -> UIInfoSetting(it)
           is KeyBindSetting -> UIKeyBindSetting(it)
           is ModeSetting -> UIModeSetting(it)
           is RangeSetting -> UIRangeSetting(it)
