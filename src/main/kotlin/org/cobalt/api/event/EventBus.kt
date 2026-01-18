@@ -5,7 +5,6 @@ import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 import java.lang.reflect.Method
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.CopyOnWriteArrayList
 import java.util.function.Consumer
 import org.cobalt.api.event.annotation.SubscribeEvent
 import org.reflections.Reflections
@@ -14,7 +13,7 @@ import org.reflections.util.ConfigurationBuilder
 
 object EventBus {
 
-  private val listeners = ConcurrentHashMap<Class<*>, CopyOnWriteArrayList<ListenerData>>()
+  private val listeners = ConcurrentHashMap<Class<*>, MutableList<ListenerData>>()
 
   private val registered = ConcurrentHashMap.newKeySet<Any>()
   private val dynamicRunnable = ConcurrentHashMap<Class<out Event>, MutableList<Runnable>>()
@@ -37,7 +36,7 @@ object EventBus {
         val consumer = createInvoker(obj, method)
 
         listeners
-          .computeIfAbsent(eventType) { CopyOnWriteArrayList() }
+          .computeIfAbsent(eventType) { ArrayList() }
           .add(ListenerData(obj, consumer, priority, method))
 
         listeners[eventType]?.sort()
