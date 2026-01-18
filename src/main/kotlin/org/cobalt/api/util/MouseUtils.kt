@@ -8,6 +8,23 @@ object MouseUtils {
   private val mc: MinecraftClient =
     MinecraftClient.getInstance()
 
+  private var isMouseUngrabbed: Boolean = false
+
+  @JvmStatic
+  fun ungrabMouse() {
+    isMouseUngrabbed = true
+  }
+
+  @JvmStatic
+  fun grabMouse() {
+    isMouseUngrabbed = false
+  }
+
+  @JvmStatic
+  fun isMouseUngrabbed(): Boolean {
+    return isMouseUngrabbed
+  }
+
   @JvmStatic
   fun leftClick() {
     (mc as MouseClickAccessor_MinecraftClientMixin).leftClick()

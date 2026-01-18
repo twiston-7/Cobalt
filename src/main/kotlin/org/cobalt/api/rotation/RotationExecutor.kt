@@ -30,7 +30,6 @@ object RotationExecutor {
     currStrat = strategy
 
     strategy.onStart()
-    MovementManager.setLookLock(true)
     isRotating = true
   }
 
@@ -38,7 +37,6 @@ object RotationExecutor {
     currStrat?.onStop()
     currStrat = null
     isRotating = false
-    MovementManager.setLookLock(false)
   }
 
   fun isRotating(): Boolean {

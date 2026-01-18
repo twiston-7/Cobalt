@@ -9,7 +9,7 @@ class KeyBind(
 
   private var wasPressed = false
 
-  fun wasPressed(): Boolean {
+  fun isPressed(): Boolean {
     if (keyCode == -1) return false
     val mc = MinecraftClient.getInstance()
 
