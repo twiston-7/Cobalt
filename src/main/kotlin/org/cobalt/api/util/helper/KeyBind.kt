@@ -3,10 +3,11 @@ package org.cobalt.api.util.helper
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.InputUtil
 
-class KeyBind {
+class KeyBind(
+  var keyCode: Int = -1,
+) {
 
   private var wasPressed = false
-  var keyCode: Int = -1
 
   fun wasPressed(): Boolean {
     if (keyCode == -1) return false
