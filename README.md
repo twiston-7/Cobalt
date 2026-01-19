@@ -39,4 +39,4 @@ Contributions are welcome and appreciated.
 
 ## License
 
-See `LICENSE` for more information.
+See `LICENSE` for more information!
